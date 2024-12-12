@@ -1,0 +1,50 @@
+{
+  "name": "ecommerce",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@wix/ecom": "^1.0.727",
+    "@wix/media": "^1.0.116",
+    "@wix/members": "^1.0.100",
+    "@wix/redirects": "^1.0.55",
+    "@wix/reviews": "^1.0.36",
+    "@wix/sdk": "^1.12.12",
+    "@wix/stores": "^1.0.214",
+    "date-fns": "^3.6.0",
+    "js-cookie": "^3.0.5",
+    "@t3-oss/env-nextjs": "^0.11.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.1",
+    "@tanstack/react-query": "^5.55.4",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "next": "15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
+    "@tanstack/eslint-plugin-query": "^5.53.0",
+    "@tanstack/react-query-devtools": "^5.55.4",
+    "@types/js-cookie": "^3.0.6",
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.0",
+    "postcss": "^8",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
