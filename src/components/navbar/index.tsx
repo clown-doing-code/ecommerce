@@ -3,10 +3,15 @@ import { getCart } from "@/wix-api/cart";
 import Link from "next/link";
 import React from "react";
 import ShoppingCartButton from "../global/shopping-cart-btn";
+import UserButton from "../global/user-btn";
+import { getLoggedInMember } from "@/wix-api/members";
 
 export default async function Navbar() {
   const wixClient = await getWixServerClient();
-  const cart = await getCart(wixClient);
+  const [cart, loggedInMember] = await Promise.all([
+    getCart(wixClient),
+    getLoggedInMember(wixClient),
+  ]);
 
   const totalQuantity =
     cart?.lineItems.reduce((acc, item) => acc + (item.quantity || 0), 0) || 0;
@@ -41,14 +46,13 @@ export default async function Navbar() {
 
           {/* Search, User, and Cart */}
           <div className="flex items-center justify-end space-x-4">
-            {totalQuantity} de productos en tu carrito
             {/* <div className="hidden lg:block">
             <SearchField />
           </div> */}
-            {/* <UserButton
-            loggedInMember={loggedInMember}
-            className="hidden lg:inline-flex"
-          /> */}
+            <UserButton
+              loggedInMember={loggedInMember}
+              className="hidden lg:inline-flex"
+            />
             <ShoppingCartButton initialData={cart} />
           </div>
         </div>
