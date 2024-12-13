@@ -1,9 +1,57 @@
-import React from 'react'
+import { getWixClient } from "@/lib/wix-client.base";
+import { getCart } from "@/wix-api/cart";
+import Link from "next/link";
+import React from "react";
 
-type Props = {}
 
-export default function Navbar({}: Props) {
+export default async function Navbar() {
+
+  const cart = await getCart();
+  const totalQuantity =
+    cart?.lineItems.reduce((acc, item) => acc + (item.quantity || 0), 0) || 0;
   return (
-    <div>Navbar</div>
-  )
+    <header className="border-b bg-white shadow-md">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Mobile menu button */}
+          <div className="flex items-center lg:hidden">
+            {/* <Suspense>
+            <MobileMenu
+              collections={collections}
+              loggedInMember={loggedInMember}
+            />
+          </Suspense> */}
+          </div>
+
+          {/* Logo */}
+          <div className="flex flex-1 items-center justify-center lg:justify-start">
+            <Link href="/" className="flex-shrink-0">
+              <span className="text-2xl font-bold text-primary">Ecommerce</span>
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center">
+            {/* <MainNavigation
+            collections={collections}
+            className="flex space-x-4"
+          /> */}
+          </div>
+
+          {/* Search, User, and Cart */}
+          <div className="flex items-center justify-end space-x-4">
+            {totalQuantity} de productos en tu carrito
+            {/* <div className="hidden lg:block">
+            <SearchField />
+          </div>
+          <UserButton
+            loggedInMember={loggedInMember}
+            className="hidden lg:inline-flex"
+          />
+          <ShoppingCartButton initialData={cart} /> */}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
 }

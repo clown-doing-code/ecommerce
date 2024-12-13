@@ -1,22 +1,22 @@
 import { delay } from "@/lib/utils";
 import { getWixClient } from "@/lib/wix-client.base";
 import Product from "./product";
+import { queryProducts } from "@/wix-api/products";
+import { getCollectionBySlug } from "@/wix-api/collection";
 
 export async function FeaturedProducts() {
   await delay(3000); //TODO: Remove after finishing
 
   const wixClient = getWixClient();
-  const { collection } =
-    await wixClient.collections.getCollectionBySlug("otra-categoria");
+  const collection = await getCollectionBySlug(wixClient, "otra-categoria");
 
   if (!collection?._id) {
     return null;
   }
-  const featuredProducts = await wixClient.products
-    .queryProducts()
-    .hasSome("collectionIds", [collection._id])
-    .descending("lastUpdated")
-    .find();
+
+  const featuredProducts = await queryProducts(wixClient, {
+    collectionIds: collection._id,
+  });
 
   if (!featuredProducts.items.length) {
     return null;
