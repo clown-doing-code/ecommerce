@@ -60,7 +60,8 @@ export default function ProductOptions({
                             "hover:bg-muted",
                             "peer-checked:border-primary peer-checked:bg-muted/10",
                             "peer-disabled:opacity-50",
-                            !isAvailable && "line-through",
+                            !isAvailable &&
+                              "cursor-not-allowed bg-gray-200 line-through",
                           )}
                         >
                           {option.optionType === products.OptionType.color && (

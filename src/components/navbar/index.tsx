@@ -1,8 +1,8 @@
-import { getWixClient } from "@/lib/wix-client.base";
 import { getWixServerClient } from "@/lib/wix-client.server";
 import { getCart } from "@/wix-api/cart";
 import Link from "next/link";
 import React from "react";
+import ShoppingCartButton from "../global/shopping-cart-btn";
 
 export default async function Navbar() {
   const wixClient = await getWixServerClient();
@@ -44,12 +44,12 @@ export default async function Navbar() {
             {totalQuantity} de productos en tu carrito
             {/* <div className="hidden lg:block">
             <SearchField />
-          </div>
-          <UserButton
+          </div> */}
+            {/* <UserButton
             loggedInMember={loggedInMember}
             className="hidden lg:inline-flex"
-          />
-          <ShoppingCartButton initialData={cart} /> */}
+          /> */}
+            <ShoppingCartButton initialData={cart} />
           </div>
         </div>
       </div>

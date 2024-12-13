@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import AddToCartButton from "@/components/global/add-to-cart-btn";
+import BackInStockNotificationButton from "@/components/global/back-in-stock-btn";
 
 interface ProductDetailsProps {
   product: products.Product;
@@ -150,7 +151,10 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               /> */}
             </div>
           ) : (
-            "Sin inventario"
+            <BackInStockNotificationButton
+              product={product}
+              selectedOptions={selectedOptions}
+            />
           )}
 
           {!!product.additionalInfoSections?.length && (
