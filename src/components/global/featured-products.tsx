@@ -1,5 +1,4 @@
 import { delay } from "@/lib/utils";
-import { getWixClient } from "@/lib/wix-client.base";
 import Product from "./product";
 import { queryProducts } from "@/wix-api/products";
 import { getCollectionBySlug } from "@/wix-api/collection";

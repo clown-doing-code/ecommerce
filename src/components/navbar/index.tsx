@@ -5,12 +5,16 @@ import React from "react";
 import ShoppingCartButton from "../global/shopping-cart-btn";
 import UserButton from "../global/user-btn";
 import { getLoggedInMember } from "@/wix-api/members";
+import { getCollections } from "@/wix-api/collection";
+import MainNavigation from "./main-nav";
+import SearchField from "./search-field";
 
 export default async function Navbar() {
   const wixClient = await getWixServerClient();
-  const [cart, loggedInMember] = await Promise.all([
+  const [cart, loggedInMember, collections] = await Promise.all([
     getCart(wixClient),
     getLoggedInMember(wixClient),
+    getCollections(wixClient),
   ]);
 
   const totalQuantity =
@@ -38,17 +42,17 @@ export default async function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center">
-            {/* <MainNavigation
-            collections={collections}
-            className="flex space-x-4"
-          /> */}
+            <MainNavigation
+              collections={collections}
+              className="flex space-x-4"
+            />
           </div>
 
           {/* Search, User, and Cart */}
           <div className="flex items-center justify-end space-x-4">
-            {/* <div className="hidden lg:block">
-            <SearchField />
-          </div> */}
+            <div className="hidden lg:block">
+              <SearchField />
+            </div>
             <UserButton
               loggedInMember={loggedInMember}
               className="hidden lg:inline-flex"
