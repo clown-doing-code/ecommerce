@@ -8,32 +8,40 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
     page?: string;
     collection?: string[];
     price_min?: string;
     price_max?: string;
     sort?: string;
-  };
+  }>;
 }
 
-export function generateMetadata({ searchParams: { q } }: PageProps): Metadata {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+
+  const {
+    q
+  } = searchParams;
+
   return {
     title: q ? `Resultados para "${q}"` : "Productos",
   };
 }
 
-export default async function Page({
-  searchParams: {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
+
+  const {
     q,
     page = "1",
     collection: collectionIds,
     price_min,
     price_max,
-    sort,
-  },
-}: PageProps) {
+    sort
+  } = searchParams;
+
   const title = q ? `Resultados par "${q}"` : "Productos";
 
   return (

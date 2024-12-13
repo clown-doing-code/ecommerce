@@ -10,13 +10,17 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface PageProps {
-  params: { slug: string };
-  searchParams: { page?: string };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
-export async function generateMetadata({
-  params: { slug },
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
+
+  const {
+    slug
+  } = params;
+
   const wixClient = await getWixServerClient();
   const collection = await getCollectionBySlug(wixClient, slug);
 
@@ -33,10 +37,19 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({
-  params: { slug },
-  searchParams: { page = "1" },
-}: PageProps) {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
+
+  const {
+    page = "1"
+  } = searchParams;
+
+  const params = await props.params;
+
+  const {
+    slug
+  } = params;
+
   const wixClient = await getWixServerClient();
   const collection = await getCollectionBySlug(wixClient, slug);
 
