@@ -6,8 +6,8 @@ export default function Loading() {
       <div className="container mx-auto px-4 py-8">
         {/* Header placeholder */}
         <div className="mb-8 flex items-center justify-between">
-          <div className="h-8 w-32 animate-pulse rounded bg-muted"></div>
-          <div className="h-8 w-40 animate-pulse rounded bg-muted"></div>
+          <div className="h-8 w-32 animate-pulse rounded"></div>
+          <div className="h-8 w-40 animate-pulse rounded"></div>
         </div>
 
         {/* Main content area */}
@@ -20,11 +20,11 @@ export default function Loading() {
 
         {/* Product grid placeholder */}
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {[...Array(8)].map((_, index) => (
-            <div key={index} className="animate-pulse rounded-lg bg-muted p-4">
-              <div className="mb-4 h-48 w-full rounded-md bg-muted-foreground/20"></div>
-              <div className="mb-2 h-4 w-3/4 rounded bg-muted-foreground/20"></div>
-              <div className="h-4 w-1/2 rounded bg-muted-foreground/20"></div>
+          {[...Array(4)].map((_, index) => (
+            <div key={index} className="animate-pulse rounded-lg p-4">
+              <div className="mb-4 h-48 w-full rounded-md"></div>
+              <div className="mb-2 h-4 w-3/4 rounded"></div>
+              <div className="h-4 w-1/2 rounded"></div>
             </div>
           ))}
         </div>

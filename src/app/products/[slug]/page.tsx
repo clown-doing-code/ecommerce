@@ -4,6 +4,7 @@ import React from "react";
 import ProductDetails from "./product-details";
 import { Metadata } from "next";
 import { delay } from "@/lib/utils";
+import { getWixServerClient } from "@/lib/wix-client.server";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -13,7 +14,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
 
   const { slug } = params;
-  const product = await getProductBySlug(slug);
+  const wixClient = await getWixServerClient();
+  const product = await getProductBySlug(wixClient, slug);
 
   if (!product) notFound();
 
@@ -42,8 +44,8 @@ export default async function Page(props: PageProps) {
   const params = await props.params;
 
   const { slug } = params;
-
-  const product = await getProductBySlug(slug);
+  const wixClient = await getWixServerClient();
+  const product = await getProductBySlug(wixClient, slug);
 
   if (!product?._id) notFound();
 

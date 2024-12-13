@@ -3,18 +3,19 @@ import { getWixClient } from "@/lib/wix-client.base";
 import Product from "./product";
 import { queryProducts } from "@/wix-api/products";
 import { getCollectionBySlug } from "@/wix-api/collection";
+import { getWixServerClient } from "@/lib/wix-client.server";
 
 export async function FeaturedProducts() {
   await delay(1000); //TODO: Remove after finishing
 
-  const wixClient = getWixClient();
+  const wixClient = await getWixServerClient();
   const collection = await getCollectionBySlug(wixClient, "otra-categoria");
 
   if (!collection?._id) {
     return null;
   }
 
-  const featuredProducts = await queryProducts({
+  const featuredProducts = await queryProducts(wixClient, {
     collectionIds: collection._id,
   });
 

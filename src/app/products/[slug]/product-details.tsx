@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import AddToCartButton from "@/components/global/add-to-cart-btn";
 
 interface ProductDetailsProps {
   product: products.Product;
@@ -134,13 +135,13 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
           {inStock ? (
             <div className="flex items-center gap-2.5">
-              {/* <AddToCartButton
+              <AddToCartButton
                 product={product}
                 selectedOptions={selectedOptions}
                 quantity={quantity}
                 disabled={availableQuantityExceeded || quantity < 1}
                 className="w-full"
-              /> */}
+              />
               {/* <BuyNowButton
                 product={product}
                 selectedOptions={selectedOptions}

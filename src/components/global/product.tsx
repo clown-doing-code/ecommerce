@@ -46,7 +46,9 @@ export default function Product({ product }: ProductProps) {
           <Badge variant="outline" className="text-base font-semibold">
             {getFormattedPrice(product)}
           </Badge>
-          <span className="text-sm font-medium text-primary">Ver Detalles</span>
+          <span className="text-sm font-medium text-primary hover:underline">
+            Ver Detalles
+          </span>
         </CardFooter>
       </Card>
     </Link>
@@ -67,4 +69,3 @@ function getFormattedPrice(product: products.Product) {
     );
   }
 }
-

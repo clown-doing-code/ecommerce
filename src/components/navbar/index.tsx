@@ -1,12 +1,13 @@
 import { getWixClient } from "@/lib/wix-client.base";
+import { getWixServerClient } from "@/lib/wix-client.server";
 import { getCart } from "@/wix-api/cart";
 import Link from "next/link";
 import React from "react";
 
-
 export default async function Navbar() {
+  const wixClient = await getWixServerClient();
+  const cart = await getCart(wixClient);
 
-  const cart = await getCart();
   const totalQuantity =
     cart?.lineItems.reduce((acc, item) => acc + (item.quantity || 0), 0) || 0;
   return (
