@@ -5,7 +5,7 @@ import { queryProducts } from "@/wix-api/products";
 import { getCollectionBySlug } from "@/wix-api/collection";
 
 export async function FeaturedProducts() {
-  await delay(3000); //TODO: Remove after finishing
+  await delay(1000); //TODO: Remove after finishing
 
   const wixClient = getWixClient();
   const collection = await getCollectionBySlug(wixClient, "otra-categoria");
@@ -14,7 +14,7 @@ export async function FeaturedProducts() {
     return null;
   }
 
-  const featuredProducts = await queryProducts(wixClient, {
+  const featuredProducts = await queryProducts({
     collectionIds: collection._id,
   });
 

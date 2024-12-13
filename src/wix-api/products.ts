@@ -1,5 +1,5 @@
 // import { WIX_STORES_APP_ID } from "@/lib/constants";
-import { WixClient } from "@/lib/wix-client.base";
+import { getWixClient, WixClient } from "@/lib/wix-client.base";
 import { cache } from "react";
 
 export type ProductsSort = "last_updated" | "price_asc" | "price_desc";
@@ -14,18 +14,16 @@ interface QueryProductsFilter {
   limit?: number;
 }
 
-export async function queryProducts(
-  wixClient: WixClient,
-  {
-    q,
-    collectionIds,
-    sort = "last_updated",
-    priceMin,
-    priceMax,
-    skip,
-    limit,
-  }: QueryProductsFilter,
-) {
+export async function queryProducts({
+  q,
+  collectionIds,
+  sort = "last_updated",
+  priceMin,
+  priceMax,
+  skip,
+  limit,
+}: QueryProductsFilter) {
+  const wixClient = getWixClient();
   let query = wixClient.products.queryProducts();
 
   if (q) {
@@ -68,23 +66,23 @@ export async function queryProducts(
   return query.find();
 }
 
-export const getProductBySlug = cache(
-  async (wixClient: WixClient, slug: string) => {
-    const { items } = await wixClient.products
-      .queryProducts()
-      .eq("slug", slug)
-      .limit(1)
-      .find();
+export const getProductBySlug = cache(async (slug: string) => {
+  const wixClient = getWixClient();
 
-    const product = items[0];
+  const { items } = await wixClient.products
+    .queryProducts()
+    .eq("slug", slug)
+    .limit(1)
+    .find();
 
-    if (!product || !product.visible) {
-      return null;
-    }
+  const product = items[0];
 
-    return product;
-  },
-);
+  if (!product || !product.visible) {
+    return null;
+  }
+
+  return product;
+});
 
 export async function getProductById(wixClient: WixClient, productId: string) {
   const result = await wixClient.products.getProduct(productId);

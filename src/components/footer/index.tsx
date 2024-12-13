@@ -60,7 +60,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Company</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Otros</h2>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link
@@ -102,7 +102,7 @@ export default function Footer() {
                 <Input
                   type="email"
                   placeholder="Ingresa tu correo"
-                  className="rounded-r-none"
+                  className="rounded-r-none bg-white"
                   required
                 />
                 <Button type="submit" className="rounded-l-none">
@@ -128,7 +128,8 @@ export default function Footer() {
         </div>
         <div className="border-t border-gray-200 py-8">
           <p className="text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} Your E-commerce Store. Todos los derechos reservados.
+            © {new Date().getFullYear()} Your E-commerce Store. Todos los
+            derechos reservados.
           </p>
         </div>
       </div>
