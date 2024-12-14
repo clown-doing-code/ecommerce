@@ -28,7 +28,7 @@ export default function SearchField({ className }: SearchFieldProps) {
       className={cn("grow", className)}
     >
       <div className="relative">
-        <Input name="q" placeholder="Buscar..." className="pe-10" />
+        <Input name="q" placeholder="Buscar..." className="pe-20" />
         <SearchIcon className="absolute right-3 top-1/2 size-5 -translate-y-1/2 transform text-muted-foreground" />
       </div>
     </form>

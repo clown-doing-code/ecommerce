@@ -61,7 +61,7 @@ export default function SearchFilterLayout({
   return (
     <main className="group flex flex-col items-center justify-center gap-10 px-5 py-4 lg:flex-row lg:items-start">
       <aside
-        className="h-fit space-y-5 lg:sticky lg:top-10 lg:w-64"
+        className="h-fit space-y-5 lg:sticky lg:top-10 lg:w-32"
         data-pending={isPending ? "" : undefined}
       >
         <CollectionsFilter
@@ -71,7 +71,7 @@ export default function SearchFilterLayout({
             updateFilters({ collection: collectionIds })
           }
         />
-        <PriceFilter
+        {/* <PriceFilter
           minDefaultInput={optimisticFilters.price_min}
           maxDefaultInput={optimisticFilters.price_max}
           updatePriceRange={(priceMin, priceMax) =>
@@ -80,7 +80,7 @@ export default function SearchFilterLayout({
               price_max: priceMax,
             })
           }
-        />
+        /> */}
       </aside>
       <div className="w-full max-w-7xl space-y-5">
         <div className="flex justify-center lg:justify-end">
@@ -108,7 +108,7 @@ function CollectionsFilter({
 }: CollectionsFilterProps) {
   return (
     <div className="space-y-3">
-      <div className="font-bold">Collections</div>
+      <div className="font-bold">Colecciones</div>
       <ul className="space-y-1.5">
         {collections.map((collection) => {
           const collectionId = collection._id;
@@ -142,7 +142,7 @@ function CollectionsFilter({
           onClick={() => updateCollectionIds([])}
           className="text-sm text-primary hover:underline"
         >
-          Clear
+          Reiniciar
         </button>
       )}
     </div>

@@ -1,6 +1,5 @@
 import WixImage from "@/components/global/wix-image";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import { getWixServerClient } from "@/lib/wix-client.server";
 import { getCollectionBySlug } from "@/wix-api/collection";
 import { Loader2 } from "lucide-react";
@@ -13,11 +12,7 @@ interface LayoutProps {
 }
 
 export default async function Layout(props: LayoutProps) {
-  const params = await props.params;
-
-  const {
-    children
-  } = props;
+  const { children, params } = props;
 
   return (
     <Suspense fallback={<LoadingSkeleton />}>
@@ -26,7 +21,9 @@ export default async function Layout(props: LayoutProps) {
   );
 }
 
-async function CollectionsLayout({ children, params: { slug } }: LayoutProps) {
+async function CollectionsLayout({ children, params }: LayoutProps) {
+  const { slug } = await params;
+
   const wixClient = await getWixServerClient();
   const collection = await getCollectionBySlug(wixClient, slug);
 

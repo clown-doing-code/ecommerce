@@ -1,13 +1,14 @@
 import { getWixServerClient } from "@/lib/wix-client.server";
 import { getCart } from "@/wix-api/cart";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import ShoppingCartButton from "../global/shopping-cart-btn";
 import UserButton from "../global/user-btn";
 import { getLoggedInMember } from "@/wix-api/members";
 import { getCollections } from "@/wix-api/collection";
 import MainNavigation from "./main-nav";
 import SearchField from "./search-field";
+import MobileMenu from "./mobile-menu";
 
 export default async function Navbar() {
   const wixClient = await getWixServerClient();
@@ -25,12 +26,12 @@ export default async function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Mobile menu button */}
           <div className="flex items-center lg:hidden">
-            {/* <Suspense>
-            <MobileMenu
-              collections={collections}
-              loggedInMember={loggedInMember}
-            />
-          </Suspense> */}
+            <Suspense>
+              <MobileMenu
+                collections={collections}
+                loggedInMember={loggedInMember}
+              />
+            </Suspense>
           </div>
 
           {/* Logo */}
