@@ -8,7 +8,6 @@ import {
   Youtube,
   CreditCard,
   ShoppingCartIcon as Paypal,
-  Mail,
 } from "lucide-react";
 import Link from "next/link";
 

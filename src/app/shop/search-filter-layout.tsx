@@ -1,19 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ProductsSort } from "@/wix-api/products";
 import { collections } from "@wix/stores";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useOptimistic, useState, useTransition } from "react";
+import { useOptimistic, useTransition } from "react";
 
 interface SearchFilterLayoutProps {
   collections: collections.Collection[];
@@ -71,26 +61,8 @@ export default function SearchFilterLayout({
             updateFilters({ collection: collectionIds })
           }
         />
-        {/* <PriceFilter
-          minDefaultInput={optimisticFilters.price_min}
-          maxDefaultInput={optimisticFilters.price_max}
-          updatePriceRange={(priceMin, priceMax) =>
-            updateFilters({
-              price_min: priceMin,
-              price_max: priceMax,
-            })
-          }
-        /> */}
       </aside>
-      <div className="w-full max-w-7xl space-y-5">
-        <div className="flex justify-center lg:justify-end">
-          <SortFilter
-            sort={optimisticFilters.sort}
-            updateSort={(sort) => updateFilters({ sort })}
-          />
-        </div>
-        {children}
-      </div>
+      <div className="w-full max-w-7xl space-y-5">{children}</div>
     </main>
   );
 }
@@ -146,86 +118,5 @@ function CollectionsFilter({
         </button>
       )}
     </div>
-  );
-}
-
-interface PriceFilterProps {
-  minDefaultInput: string | undefined;
-  maxDefaultInput: string | undefined;
-  updatePriceRange: (min: string | undefined, max: string | undefined) => void;
-}
-
-function PriceFilter({
-  minDefaultInput,
-  maxDefaultInput,
-  updatePriceRange,
-}: PriceFilterProps) {
-  const [minInput, setMinInput] = useState(minDefaultInput);
-  const [maxInput, setMaxInput] = useState(maxDefaultInput);
-
-  useEffect(() => {
-    setMinInput(minDefaultInput || "");
-    setMaxInput(maxDefaultInput || "");
-  }, [minDefaultInput, maxDefaultInput]);
-
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    updatePriceRange(minInput, maxInput);
-  }
-
-  return (
-    <div className="space-y-3">
-      <div className="font-bold">Rango de precio</div>
-      <form className="flex items-center gap-2" onSubmit={onSubmit}>
-        <Input
-          type="number"
-          name="min"
-          placeholder="Min"
-          value={minInput}
-          onChange={(e) => setMinInput(e.target.value)}
-          className="w-20"
-        />
-        <span>-</span>
-        <Input
-          type="number"
-          name="max"
-          placeholder="Max"
-          value={maxInput}
-          onChange={(e) => setMaxInput(e.target.value)}
-          className="w-20"
-        />
-        <Button type="submit">Buscar</Button>
-      </form>
-      {(!!minDefaultInput || !!maxDefaultInput) && (
-        <button
-          onClick={() => updatePriceRange(undefined, undefined)}
-          className="text-sm text-primary hover:underline"
-        >
-          Limpiar
-        </button>
-      )}
-    </div>
-  );
-}
-
-interface SortFilterProps {
-  sort: string | undefined;
-  updateSort: (value: ProductsSort) => void;
-}
-
-function SortFilter({ sort, updateSort }: SortFilterProps) {
-  return (
-    <Select value={sort || "last_updated"} onValueChange={updateSort}>
-      <SelectTrigger className="w-fit gap-2 text-start">
-        <span>
-          Clasificar por: <SelectValue />
-        </span>
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="last_updated">Nuevo</SelectItem>
-        <SelectItem value="price_asc">Precio (Bajo a alto)</SelectItem>
-        <SelectItem value="price_desc">Precio (Alto a bajo)</SelectItem>
-      </SelectContent>
-    </Select>
   );
 }

@@ -1,7 +1,6 @@
 import PaginationBar from "@/components/global/pagination-bar";
 import Product from "@/components/global/product";
 import { Skeleton } from "@/components/ui/skeleton";
-import { delay } from "@/lib/utils";
 import { getWixServerClient } from "@/lib/wix-client.server";
 import { getCollectionBySlug } from "@/wix-api/collection";
 import { queryProducts } from "@/wix-api/products";
@@ -17,9 +16,7 @@ interface PageProps {
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
 
-  const {
-    slug
-  } = params;
+  const { slug } = params;
 
   const wixClient = await getWixServerClient();
   const collection = await getCollectionBySlug(wixClient, slug);
@@ -40,15 +37,11 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 export default async function Page(props: PageProps) {
   const searchParams = await props.searchParams;
 
-  const {
-    page = "1"
-  } = searchParams;
+  const { page = "1" } = searchParams;
 
   const params = await props.params;
 
-  const {
-    slug
-  } = params;
+  const { slug } = params;
 
   const wixClient = await getWixServerClient();
   const collection = await getCollectionBySlug(wixClient, slug);

@@ -110,7 +110,7 @@ export default function ShoppingCartButton({
               <div className="flex items-center justify-between text-base">
                 <p className="font-semibold">Subtotal</p>
                 <p className="font-semibold">
-                  {/* @ts-expect-error */}
+                  {/* @ts-expect-error - Cart subtotal type mismatch in Wix SDK types */}
                   {cartQuery.data?.subtotal?.formattedConvertedAmount}
                 </p>
               </div>

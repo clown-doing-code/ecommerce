@@ -191,7 +191,7 @@ export default function ShippingAndReturnsPage() {
                 </p>
                 <ol className="list-decimal space-y-2 pl-5">
                   <li>Inicie sesión en su cuenta en nuestro sitio web.</li>
-                  <li>Vaya a la sección "Mis Pedidos".</li>
+                  Si no tiene una cuenta, puede usar el número de pedido.
                   <li>Haga clic en el número de pedido que desea rastrear.</li>
                   <li>
                     Encontrará el número de seguimiento y un enlace directo al

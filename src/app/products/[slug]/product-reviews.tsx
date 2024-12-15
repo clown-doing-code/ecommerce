@@ -11,7 +11,6 @@ import { reviews } from "@wix/reviews";
 import { media as wixMedia } from "@wix/sdk";
 import { products } from "@wix/stores";
 import { CornerDownRight, StarIcon } from "lucide-react";
-import Image from "next/image";
 import Zoom from "react-medium-image-zoom";
 //TODO: Customize the email automation when users make a purchase
 interface ProductReviewsProps {

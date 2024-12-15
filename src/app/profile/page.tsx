@@ -4,9 +4,7 @@ import { notFound } from "next/navigation";
 import { getWixServerClient } from "@/lib/wix-client.server";
 import { getLoggedInMember } from "@/wix-api/members";
 
-type Props = {};
-
-export default async function Page({}: Props) {
+export default async function Page() {
   const wixClient = await getWixServerClient();
   const member = await getLoggedInMember(wixClient);
 

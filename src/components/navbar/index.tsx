@@ -18,8 +18,7 @@ export default async function Navbar() {
     getCollections(wixClient),
   ]);
 
-  const totalQuantity =
-    cart?.lineItems.reduce((acc, item) => acc + (item.quantity || 0), 0) || 0;
+  cart?.lineItems.reduce((acc, item) => acc + (item.quantity || 0), 0) || 0;
   return (
     <header className="border-b bg-white shadow-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

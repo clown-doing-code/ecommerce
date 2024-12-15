@@ -10,7 +10,7 @@ import { files } from "@wix/media";
 import { members } from "@wix/members";
 import { redirects } from "@wix/redirects";
 import { reviews } from "@wix/reviews";
-import { createClient, OAuthStrategy, Token, Tokens } from "@wix/sdk";
+import { createClient, OAuthStrategy, Tokens } from "@wix/sdk";
 import { collections, products } from "@wix/stores";
 
 export function getWixClient(tokens: Tokens | undefined) {

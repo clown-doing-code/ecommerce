@@ -2,13 +2,7 @@
 
 import useAuth from "@/hooks/auth";
 import { members } from "@wix/members";
-import {
-  Check,
-  ChevronDown,
-  LogInIcon,
-  LogOutIcon,
-  UserIcon,
-} from "lucide-react";
+import { ChevronDown, LogInIcon, LogOutIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import {

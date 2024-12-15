@@ -191,27 +191,27 @@ export default function FAQPage() {
         </div>
       </form>
 
-      {searchResults.length > 0 ? (
+      {/* {searchResults.length > 0 ? (
         <div className="mb-8">
           <h2 className="mb-4 text-2xl font-semibold">
             Resultados de búsqueda
           </h2>
-          {/* <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full">
             {searchResults.map((result, index) => (
               <AccordionItem key={index} value={`search-result-${index}`}>
                 <AccordionTrigger>{result.question}</AccordionTrigger>
                 <AccordionContent>{result.answer}</AccordionContent>
               </AccordionItem>
             ))}
-          </Accordion> */}
+          </Accordion>
         </div>
       ) : (
         searchTerm && (
           <p className="mb-8 text-center">
-            No se encontraron resultados para "{searchTerm}"
+            No se encontraron resultados para &quot;
           </p>
         )
-      )}
+      )} */}
 
       <Tabs defaultValue="productos">
         <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
