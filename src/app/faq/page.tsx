@@ -185,7 +185,9 @@ export default function FAQPage() {
             className="flex-grow"
             disabled
           />
-          <Button type="submit">Buscar</Button>
+          <Button disabled type="submit">
+            Buscar
+          </Button>
         </div>
       </form>
 

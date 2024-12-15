@@ -18,16 +18,16 @@ export const getWixServerClient = cache(async () => {
   return getWixClient(tokens);
 });
 
-// export const getWixAdminClient = cache(() => {
-//   const wixClient = createClient({
-//     modules: {
-//       files,
-//     },
-//     auth: ApiKeyStrategy({
-//       apiKey: env.WIX_API_KEY,
-//       siteId: env.NEXT_PUBLIC_WIX_SITE_ID,
-//     }),
-//   });
+export const getWixAdminClient = cache(() => {
+  const wixClient = createClient({
+    modules: {
+      files,
+    },
+    auth: ApiKeyStrategy({
+      apiKey: env.WIX_API_KEY,
+      siteId: env.NEXT_PUBLIC_WIX_SITE_ID,
+    }),
+  });
 
-//   return wixClient;
-// });
+  return wixClient;
+});

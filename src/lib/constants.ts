@@ -6,3 +6,5 @@ export const WIX_STORES_APP_ID_BACK_IN_STOCK_NOTIFICATIONS =
   "1380b703-ce81-ff05-f115-39571d94dfcd";
 
 export const WIX_OAUTH_DATA_COOKIE = "wix_oauth_data";
+
+export const SUPPORT_EMAIL = "support@nextflowshop.com";

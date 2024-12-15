@@ -26,6 +26,7 @@ import Link from "next/link";
 import WixImage from "./wix-image";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import CheckoutButton from "./checkout-btn";
 
 interface ShoppingCartButtonProps {
   initialData: currentCart.Cart | null;
@@ -116,7 +117,10 @@ export default function ShoppingCartButton({
               <p className="text-xs text-muted-foreground">
                 Impuestos y tarifas calculados al momento de realizar el pago
               </p>
-              <Button className="w-full">Ir a pagar</Button>
+              <CheckoutButton
+                disabled={!totalQuantity || cartQuery.isFetching}
+                className="w-full"
+              />
             </div>
           ) : null}
         </SheetContent>

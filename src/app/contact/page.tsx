@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,9 +26,17 @@ import {
 } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
+interface ContactFormData {
+fullName: string;
+email: string;
+phone: string;
+orderNumber: string;
+inquiryType: string;
+message: string;
+}
 
 export default function PaginaDeContacto() {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState<ContactFormData>({
     fullName: "",
     email: "",
     phone: "",
@@ -37,7 +45,9 @@ export default function PaginaDeContacto() {
     message: "",
   });
 
-  const handleChange = (e: any) => {
+const handleChange = (
+e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | { target: { name: string; value: string } }
+) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -45,7 +55,7 @@ export default function PaginaDeContacto() {
     }));
   };
 
-  const handleSubmit = (e: any) => {
+const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle form submission here
     console.log(formData);

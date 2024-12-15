@@ -113,7 +113,7 @@ export async function getRelatedProducts(
           catalogItemId: productId,
         },
       ],
-      minimumRecommendedItems: 3,
+      minimumRecommendedItems: 4,
     },
   );
 
