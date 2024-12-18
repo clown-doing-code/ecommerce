@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import placeholder from "@/assets/placeholder.svg";
+import Link from "next/link";
 
 export default function AboutPage() {
   return (
@@ -11,13 +12,13 @@ export default function AboutPage() {
       </h1>
 
       {/* Hero Section */}
-    <div className="relative mb-12 h-[400px]">
-    <Image
-        src={placeholder}
-        alt="Colorful scene from Santo Domingo&apos;s Zona Colonial"
-        className="rounded-lg object-cover"
-        priority
-        fill
+      <div className="relative mb-12 h-[400px]">
+        <Image
+          src={placeholder}
+          alt="Colorful scene from Santo Domingo's Zona Colonial"
+          className="rounded-lg object-cover"
+          priority
+          fill
         />
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <p className="px-4 text-center text-2xl font-semibold text-white">
@@ -151,7 +152,7 @@ export default function AboutPage() {
             <div className="w-24 font-bold">2021</div>
             <div className="flex-grow border-t border-gray-300"></div>
             <div className="w-3/4">
-            Introducción de nuestra línea sostenible &apos;Eco-Quisqueya&apos;
+              Introducción de nuestra línea sostenible &apos;Eco-Quisqueya&apos;
             </div>
           </div>
           <div className="flex items-center">
@@ -173,11 +174,11 @@ export default function AboutPage() {
             (name, index) => (
               <div key={index} className="text-center">
                 <div className="relative mb-2 h-48">
-                <Image
-                src={placeholder}
-                alt={name}
-                className="rounded-full object-cover"
-                fill
+                  <Image
+                    src={placeholder}
+                    alt={name}
+                    className="rounded-full object-cover"
+                    fill
                   />
                 </div>
                 <h3 className="font-semibold">{name}</h3>
@@ -198,7 +199,9 @@ export default function AboutPage() {
           Descubre nuestra última colección y lleva un pedazo del Caribe a tu
           guardarropa.
         </p>
-        <Button size="lg">Comprar Ahora</Button>
+        <Button size="lg" asChild>
+          <Link href="/shop">Comprar Ahora</Link>
+        </Button>
       </section>
     </div>
   );

@@ -1,100 +1,106 @@
-"use client";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Avatar } from "@/components/ui/avatar";
-import { CheckCircle } from "lucide-react";
-import Image from "next/image";
-import placeholder from "@/assets/placeholder.svg";
+import { getWixServerClient } from "@/lib/wix-client.server";
+import { getLoggedInMember } from "@/wix-api/members";
+import { getOrder } from "@/wix-api/orders";
+import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { CheckCircle, Package, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Order from "@/components/global/order";
+import ClearCart from "./clear-cart";
 
-//TODO: Customize this component
-const orderData = {
-  orderNumber: "1234567890",
-  estimatedDelivery: "15 de julio, 2023",
-  items: [
-    {
-      id: 1,
-      name: "Camisa de Lino",
-      price: 1500,
-      image: placeholder,
-    },
-    {
-      id: 2,
-      name: "Pantalón de Algodón",
-      price: 2000,
-      image: placeholder,
-    },
-  ],
-  total: 3500,
-  shippingAddress: "Calle Principal #123, Santo Domingo, República Dominicana",
-  paymentMethod: "Tarjeta de crédito (Visa terminada en 1234)",
+interface PageProps {
+  searchParams: Promise<{ orderId: string }>;
+}
+
+export const metadata: Metadata = {
+  title: "Confirmación de Pedido | Gracias por tu Compra",
+  description:
+    "Tu pedido ha sido realizado con éxito. Consulta los detalles de tu pedido y los siguientes pasos.",
 };
 
-export default function CheckoutSuccessPage() {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
-        className="mb-8 text-center"
-      >
-        <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
-        <h1 className="text-3xl font-bold text-green-700">
-          ¡Gracias por tu compra!
-        </h1>
-        <p className="text-xl text-gray-600">Tu pedido ha sido confirmado.</p>
-      </motion.div>
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const { orderId } = searchParams;
 
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Resumen del Pedido</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4">
-            <div className="flex justify-between">
-              <span className="font-semibold">Número de Pedido:</span>
-              <span>{orderData.orderNumber}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold">Fecha Estimada de Entrega:</span>
-              <span>{orderData.estimatedDelivery}</span>
-            </div>
-            <Separator />
-            <div>
-              <h3 className="mb-2 font-semibold">Artículos Comprados:</h3>
-              {orderData.items.map((item) => (
-                <div
-                  key={item.id}
-                  className="mb-2 flex items-center justify-between"
-                >
-                  <div className="flex items-center">
-                    <Avatar className="mr-2 h-10 w-10">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        width={40}
-                        height={40}
-                      />
-                    </Avatar>
-                    <span>{item.name}</span>
-                  </div>
-                  <span>RD${item.price}</span>
-                </div>
-              ))}
-            </div>
-            <Separator />
-            <div className="flex justify-between font-bold">
-              <span>Total Pagado:</span>
-              <span>RD${orderData.total}</span>
-            </div>
-            <div>
-              <h3 className="mb-2 font-semibold">Dirección de Envío:</h3>
-              <p>{orderData.shippingAddress}</p>
-            </div>
+  const wixClient = await getWixServerClient();
+
+  const [order, loggedInMember] = await Promise.all([
+    getOrder(wixClient, orderId),
+    getLoggedInMember(wixClient),
+  ]);
+
+  if (!order) {
+    notFound();
+  }
+
+  const orderCreatedDate = order._createdDate
+    ? new Date(order._createdDate)
+    : null;
+
+  const showClearCart =
+    orderCreatedDate && orderCreatedDate.getTime() > Date.now() - 60_000 * 5;
+
+  return (
+    <main className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
+      <Card className="overflow-hidden">
+        <CardHeader className="bg-primary py-10 text-center text-primary-foreground">
+          <div className="mb-4 flex justify-center">
+            <CheckCircle className="h-16 w-16" />
           </div>
+          <CardTitle className="mb-2 text-3xl font-bold md:text-4xl">
+            ¡Gracias por tu Pedido!
+          </CardTitle>
+          <p className="text-lg">
+            Un resumen de tu pedido ha sido enviado a tu dirección de correo
+            electrónico.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-8 p-6 md:p-8">
+          <div>
+            <h2 className="mb-4 flex items-center justify-center text-2xl font-bold">
+              <Package className="mr-2" /> Detalles del Pedido
+            </h2>
+            <Order order={order} />
+          </div>
+          {loggedInMember && (
+            <div className="text-center">
+              <h3 className="mb-4 flex items-center justify-center text-xl font-semibold">
+                <User className="mr-2" /> Tu Cuenta
+              </h3>
+              <p className="mb-4">
+                Rastrea tu pedido y consulta tu historial de compras en tu
+                cuenta.
+              </p>
+              <Button asChild>
+                <Link href="/profile">Ver tus Pedidos</Link>
+              </Button>
+            </div>
+          )}
         </CardContent>
+        <CardFooter className="flex flex-col items-center space-y-4 bg-muted p-6">
+          <p className="text-center text-muted-foreground">
+            Si tienes alguna pregunta sobre tu pedido, no dudes en contactar con
+            nuestro servicio de atención al cliente.
+          </p>
+          <div className="flex space-x-4">
+            <Button variant="outline" asChild>
+              <Link href="/contact">Contactar Soporte</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/">Continuar Comprando</Link>
+            </Button>
+          </div>
+          {showClearCart && <ClearCart />}
+        </CardFooter>
       </Card>
-    </div>
+    </main>
   );
 }

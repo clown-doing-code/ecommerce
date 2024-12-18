@@ -5,6 +5,9 @@ import { formatDate } from "date-fns";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 import WixImage from "./wix-image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Mail, Package, Truck } from "lucide-react";
 
 interface OrderProps {
   order: orders.Order;
@@ -12,19 +15,19 @@ interface OrderProps {
 
 export default function Order({ order }: OrderProps) {
   const paymentStatusMap: Record<orders.PaymentStatus, string> = {
-    [orders.PaymentStatus.PAID]: "Paid",
-    [orders.PaymentStatus.NOT_PAID]: "Not paid",
-    [orders.PaymentStatus.FULLY_REFUNDED]: "Refunded",
-    [orders.PaymentStatus.PARTIALLY_PAID]: "Partially paid",
-    [orders.PaymentStatus.PARTIALLY_REFUNDED]: "Partially refunded",
-    [orders.PaymentStatus.PENDING]: "Pending",
-    [orders.PaymentStatus.UNSPECIFIED]: "No information",
+    [orders.PaymentStatus.PAID]: "Pagado",
+    [orders.PaymentStatus.NOT_PAID]: "No Pago",
+    [orders.PaymentStatus.FULLY_REFUNDED]: "Reembolsado",
+    [orders.PaymentStatus.PARTIALLY_PAID]: "Parcialmente Pagado",
+    [orders.PaymentStatus.PARTIALLY_REFUNDED]: "Parcialmente Reembolsado",
+    [orders.PaymentStatus.PENDING]: "Pendiente",
+    [orders.PaymentStatus.UNSPECIFIED]: "Sin Información",
   };
 
   const fulfillmentStatusMap: Record<orders.FulfillmentStatus, string> = {
-    [orders.FulfillmentStatus.FULFILLED]: "Delivered",
-    [orders.FulfillmentStatus.NOT_FULFILLED]: "Not sent",
-    [orders.FulfillmentStatus.PARTIALLY_FULFILLED]: "Partially delivered",
+    [orders.FulfillmentStatus.FULFILLED]: "Enviado",
+    [orders.FulfillmentStatus.NOT_FULFILLED]: "No Enviado",
+    [orders.FulfillmentStatus.PARTIALLY_FULFILLED]: "Parcialmente Enviado",
   };
 
   const paymentStatus = order.paymentStatus
@@ -39,72 +42,102 @@ export default function Order({ order }: OrderProps) {
     order.shippingInfo?.logistics?.shippingDestination;
 
   return (
-    <div className="w-full space-y-5 border p-5">
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="font-bold">Order #{order.number}</span>
-        {order._createdDate && (
-          <span>{formatDate(order._createdDate, "MMM d, yyyy")}</span>
-        )}
+    <Card className="w-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-2xl font-bold">
+          Pedido #{order.number}
+        </CardTitle>
         <Link
-          href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(`Order #${order.number} help`)}&body=${encodeURIComponent(`I need help with order #${order.number}\n\n<Describe your problem>`)}`}
-          className="ms-auto text-sm hover:underline"
+          href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(`Ayuda para Pedido #${order.number}`)}&body=${encodeURIComponent(`Necesito ayuda con el pedido #${order.number}\n\n<Describe tu problema>`)}`}
+          className="flex items-center text-sm font-medium text-primary hover:underline"
         >
-          Need help?
+          <Mail className="mr-2 h-4 w-4" />
+          ¿Necesitas ayuda?
         </Link>
-      </div>
-      <div className="flex flex-wrap gap-3 text-sm">
-        <div className="basis-96">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-3 font-semibold">
-              <span>
-                Subtotal: {order.priceSummary?.subtotal?.formattedAmount}
-              </span>
-              <Badge
-                className={cn(
-                  "bg-secondary text-secondary-foreground",
-                  order.paymentStatus === orders.PaymentStatus.NOT_PAID &&
-                    "bg-red-500 text-white",
-                  order.paymentStatus === orders.PaymentStatus.PAID &&
-                    "bg-green-500 text-white",
-                )}
-              >
-                {paymentStatus || "No information"}
-              </Badge>
-            </div>
-            <div className="font-semibold">
-              {fulfillmentStatus || "No information"}
-            </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col space-y-4">
+          <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            {order._createdDate && (
+              <span>{formatDate(order._createdDate, "d MMM, yyyy")}</span>
+            )}
+            <Badge
+              className={cn(
+                "ml-auto",
+                order.paymentStatus === orders.PaymentStatus.NOT_PAID &&
+                  "bg-red-500 text-white",
+                order.paymentStatus === orders.PaymentStatus.PAID &&
+                  "bg-green-500 text-white",
+              )}
+            >
+              {paymentStatus || "Sin información"}
+            </Badge>
+            <Badge variant="outline" className="flex items-center">
+              <Package className="mr-1 h-3 w-3" />
+              {fulfillmentStatus || "Sin información"}
+            </Badge>
           </div>
-          <div className="divide-y">
-            {order.lineItems?.map((item) => (
-              <OrderItem key={item._id} item={item} />
-            ))}
+
+          <Separator />
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <h3 className="mb-2 font-semibold">Artículos del Pedido</h3>
+              <div className="space-y-4">
+                {order.lineItems?.map((item) => (
+                  <OrderItem key={item._id} item={item} />
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-2 font-semibold">Resumen del Pedido</h3>
+              <div className="rounded-lg bg-secondary p-4">
+                <div className="flex justify-between">
+                  <span>Subtotal:</span>
+                  <span className="font-medium">
+                    {order.priceSummary?.subtotal?.formattedAmount}
+                  </span>
+                </div>
+                {/* Agregar más detalles del resumen si es necesario */}
+              </div>
+
+              {shippingDestination && (
+                <div className="mt-4">
+                  <h3 className="mb-2 font-semibold">Dirección de Entrega</h3>
+                  <div className="rounded-lg bg-secondary p-4">
+                    <div className="flex items-start">
+                      <Truck className="mr-2 h-5 w-5 flex-shrink-0" />
+                      <div>
+                        <p>
+                          {shippingDestination.contactDetails?.firstName}{" "}
+                          {shippingDestination.contactDetails?.lastName}
+                        </p>
+                        <p>
+                          {shippingDestination.address?.streetAddress?.name}{" "}
+                          {shippingDestination.address?.streetAddress?.number}
+                        </p>
+                        <p>
+                          {shippingDestination.address?.postalCode}{" "}
+                          {shippingDestination.address?.city}
+                        </p>
+                        <p>
+                          {shippingDestination.address?.subdivision ||
+                            shippingDestination.address?.country}
+                        </p>
+                        <p className="mt-2 font-medium">
+                          {order.shippingInfo?.title}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        {shippingDestination && (
-          <div className="space-y-0.5">
-            <div className="font-semibold">Delivery address:</div>
-            <p>
-              {shippingDestination.contactDetails?.firstName}{" "}
-              {shippingDestination.contactDetails?.lastName}
-            </p>
-            <p>
-              {shippingDestination.address?.streetAddress?.name}{" "}
-              {shippingDestination.address?.streetAddress?.number}
-            </p>
-            <p>
-              {shippingDestination.address?.postalCode}{" "}
-              {shippingDestination.address?.city}
-            </p>
-            <p>
-              {shippingDestination.address?.subdivision ||
-                shippingDestination.address?.country}
-            </p>
-            <p className="font-semibold">{order.shippingInfo?.title}</p>
-          </div>
-        )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -114,21 +147,21 @@ interface OrderItemProps {
 
 function OrderItem({ item }: OrderItemProps) {
   return (
-    <div className="flex flex-wrap gap-3 py-5 last:pb-0">
+    <div className="flex items-center space-x-4">
       <WixImage
         mediaIdentifier={item.image}
-        width={110}
-        height={110}
-        alt={item.productName?.translated || "Product image"}
-        className="flex-none bg-secondary"
+        width={80}
+        height={80}
+        alt={item.productName?.translated || "Imagen del producto"}
+        className="rounded-md bg-secondary object-cover"
       />
-      <div className="space-y-0.5">
-        <p className="line-clamp-1 font-bold">{item.productName?.translated}</p>
-        <p>
+      <div className="flex-1 space-y-1">
+        <p className="font-medium">{item.productName?.translated}</p>
+        <p className="text-sm text-muted-foreground">
           {item.quantity} x {item.price?.formattedAmount}
         </p>
         {!!item.descriptionLines?.length && (
-          <p>
+          <p className="text-xs text-muted-foreground">
             {item.descriptionLines
               .map(
                 (line) =>

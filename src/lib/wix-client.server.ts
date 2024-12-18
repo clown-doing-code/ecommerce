@@ -13,7 +13,9 @@ export const getWixServerClient = cache(async () => {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get(WIX_SESSION_COOKIE);
     tokens = sessionCookie ? JSON.parse(sessionCookie.value) : undefined;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 
   return getWixClient(tokens);
 });

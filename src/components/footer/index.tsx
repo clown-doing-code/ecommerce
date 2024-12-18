@@ -36,11 +36,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/terms-conditions" className="hover:text-gray-900">
-                  Terminos y Condiciones
-                </Link>
-              </li>
-              <li>
                 <Link href="/faq" className="hover:text-gray-900">
                   Preguntas Frecuentes
                 </Link>
@@ -104,17 +99,13 @@ export default function Footer() {
 
           {/* Copyright and Legal */}
           <div className="text-center text-sm md:text-right">
-            <p>&copy; 2023 Your Store Name. All rights reserved.</p>
+            <p>&copy; 2023 Your Store Name. Todos los derechos reservados.</p>
             <p className="mt-1">
-              <Link href="/privacy-policy" className="hover:text-gray-900">
-                Privacy Policy
-              </Link>{" "}
-              |
               <Link
                 href="/terms-conditions"
                 className="ml-2 hover:text-gray-900"
               >
-                Terms & Conditions
+                Términos y Condiciones
               </Link>
             </p>
           </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import LoadingButton from "@/components/global/loading-btn";
 import WixImage from "@/components/global/wix-image";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,9 +11,17 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { reviews } from "@wix/reviews";
 import { media as wixMedia } from "@wix/sdk";
 import { products } from "@wix/stores";
-import { CornerDownRight, StarIcon } from "lucide-react";
+import {
+  CornerDownRight,
+  StarIcon,
+  ThumbsUp,
+  MessageSquare,
+} from "lucide-react";
 import Zoom from "react-medium-image-zoom";
-//TODO: Customize the email automation when users make a purchase
+import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
+
 interface ProductReviewsProps {
   product: products.Product;
 }
@@ -26,7 +35,7 @@ export default function ProductReviews({ product }: ProductReviewsProps) {
           throw Error("Product ID missing");
         }
 
-        const pageSize = 2;
+        const pageSize = 5;
 
         return getProductReviews(wixBrowserClient, {
           productId: product._id,
@@ -51,27 +60,94 @@ export default function ProductReviews({ product }: ProductReviewsProps) {
 
   const reviewItems = data?.pages.flatMap((page) => page.items) || [];
 
+  const averageRating =
+    reviewItems.reduce(
+      (acc, review) => acc + (review.content?.rating || 0),
+      0,
+    ) / reviewItems.length;
+  const ratingCounts = reviewItems.reduce(
+    (acc, review) => {
+      const rating = review.content?.rating || 0;
+      acc[rating] = (acc[rating] || 0) + 1;
+      return acc;
+    },
+    {} as Record<number, number>,
+  );
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-8 rounded-lg bg-white p-6 shadow-md">
+      <h2 className="mb-4 text-2xl font-bold">Reseñas del Producto</h2>
       {status === "pending" && <ProductReviewsLoadingSkeleton />}
       {status === "error" && (
         <p className="text-destructive">Error fetching reviews</p>
       )}
       {status === "success" && !reviewItems.length && !hasNextPage && (
-        <p>No reviews yet</p>
+        <p className="italic text-gray-500">
+          Este producto aun no tiene reseñas, se el primero en dejar una.{" "}
+        </p>
       )}
-      <div className="divide-y">
-        {reviewItems.map((review) => (
-          <Review key={review._id} review={review} />
-        ))}
-      </div>
-      {hasNextPage && (
-        <LoadingButton
-          loading={isFetchingNextPage}
-          onClick={() => fetchNextPage()}
-        >
-          Load more reviews
-        </LoadingButton>
+      {status === "success" && reviewItems.length > 0 && (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="col-span-1">
+            <div className="text-center">
+              <div className="text-5xl font-bold">
+                {averageRating.toFixed(1)}
+              </div>
+              <div className="my-2 flex justify-center">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <StarIcon
+                    key={i}
+                    className={cn(
+                      "size-5",
+                      i < Math.round(averageRating)
+                        ? "fill-primary text-primary"
+                        : "text-gray-300",
+                    )}
+                  />
+                ))}
+              </div>
+              <div className="text-sm text-gray-500">
+                {reviewItems.length} reseña
+              </div>
+            </div>
+            <div className="mt-4 space-y-2">
+              {[5, 4, 3, 2, 1].map((rating) => (
+                <div key={rating} className="flex items-center">
+                  <span className="w-24 text-sm text-gray-600">
+                    {rating} estrellas
+                  </span>
+                  <Progress
+                    value={
+                      ((ratingCounts[rating] || 0) / reviewItems.length) * 100
+                    }
+                    className="mx-2 h-2"
+                  />
+                  <span className="w-12 text-right text-sm text-gray-600">
+                    {ratingCounts[rating] || 0}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="col-span-2">
+            <div className="space-y-6">
+              {reviewItems.map((review) => (
+                <Review key={review._id} review={review} />
+              ))}
+            </div>
+            {hasNextPage && (
+              <div className="mt-6 text-center">
+                <LoadingButton
+                  loading={isFetchingNextPage}
+                  onClick={() => fetchNextPage()}
+                  className="hover:bg-primary-dark bg-primary text-white"
+                >
+                  Cargar más
+                </LoadingButton>
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
@@ -84,44 +160,80 @@ interface ReviewProps {
 function Review({
   review: { author, reviewDate, content, reply },
 }: ReviewProps) {
+  const [isLiked, setIsLiked] = useState(false);
+
   return (
-    <div className="py-5 first:pt-0 last:pb-0">
-      <div className="space-y-1.5">
-        <div className="flex items-center gap-2">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <StarIcon
-              key={i}
-              className={cn(
-                "size-5 text-primary",
-                i < (content?.rating || 0) && "fill-primary",
-              )}
-            />
-          ))}
-          {content?.title && <h3 className="font-bold">{content.title}</h3>}
-        </div>
-        <p className="text-sm text-muted-foreground">
-          by {author?.authorName || "Anonymous"}
-          {reviewDate && <> on {new Date(reviewDate).toLocaleDateString()}</>}
-        </p>
-        {content?.body && (
-          <div className="whitespace-pre-line">{content.body}</div>
-        )}
-        {!!content?.media?.length && (
-          <div className="flex flex-wrap gap-2">
-            {content.media.map((media) => (
-              <MediaAttachment key={media.image || media.video} media={media} />
-            ))}
+    <div className="border-b pb-6 last:border-b-0">
+      <div className="flex items-start space-x-4">
+        <Avatar className="h-10 w-10 items-center justify-center bg-muted-foreground text-white">
+          {author?.authorName ? author.authorName[0].toUpperCase() : "A"}
+        </Avatar>
+        <div className="flex-grow">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold">
+                {author?.authorName || "Anonymous"}
+              </h3>
+              <div className="flex items-center space-x-2">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <StarIcon
+                    key={i}
+                    className={cn(
+                      "size-4",
+                      i < (content?.rating || 0)
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "text-gray-300",
+                    )}
+                  />
+                ))}
+                {content?.title && (
+                  <span className="font-medium text-gray-700">
+                    {content.title}
+                  </span>
+                )}
+              </div>
+            </div>
+            {reviewDate && (
+              <span className="text-sm text-gray-500">
+                {new Date(reviewDate).toLocaleDateString()}
+              </span>
+            )}
           </div>
-        )}
+          {content?.body && (
+            <p className="mt-2 text-gray-600">{content.body}</p>
+          )}
+          {!!content?.media?.length && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {content.media.map((media) => (
+                <MediaAttachment
+                  key={media.image || media.video}
+                  media={media}
+                />
+              ))}
+            </div>
+          )}
+          <div className="mt-3 flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn("text-gray-500", isLiked && "text-primary")}
+              onClick={() => setIsLiked(!isLiked)}
+            >
+              <ThumbsUp className="mr-1 size-4" />
+              Me gusta
+            </Button>
+          </div>
+        </div>
       </div>
       {reply?.message && (
-        <div className="ms-10 mt-2.5 space-y-1 border-t pt-2.5">
-          <div className="flex items-center gap-2">
-            <CornerDownRight className="size-5" />
-
-            <span className="font-bold">Flow Shop Team</span>
+        <div className="ml-14 mt-4 rounded-lg bg-gray-100 p-4">
+          <div className="mb-2 flex items-center space-x-2">
+            <Avatar className="h-6 w-6 items-center justify-center bg-muted-foreground text-xs text-white">
+              S
+            </Avatar>
+            <span className="text-sm font-semibold">Flow Shop Team</span>
           </div>
-          <div className="whitespace-pre-line">{reply.message}</div>
+          <p className="text-sm text-gray-600">{reply.message}</p>
         </div>
       )}
     </div>
@@ -130,12 +242,15 @@ function Review({
 
 export function ProductReviewsLoadingSkeleton() {
   return (
-    <div className="space-y-10">
-      {Array.from({ length: 2 }).map((_, i) => (
-        <div className="space-y-1.5" key={i}>
-          <Skeleton className="h-8 w-52" />
-          <Skeleton className="h-6 w-48" />
-          <Skeleton className="h-16 w-72" />
+    <div className="space-y-8">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div className="flex space-x-4" key={i}>
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <div className="flex-grow space-y-2">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-20 w-full" />
+          </div>
         </div>
       ))}
     </div>
@@ -154,7 +269,7 @@ function MediaAttachment({ media }: MediaAttachmentProps) {
           mediaIdentifier={media.image}
           alt="Review media"
           scaleToFill={false}
-          className="max-h-40 max-w-40 object-contain"
+          className="max-h-20 max-w-20 rounded-md object-cover"
         />
       </Zoom>
     );
@@ -162,7 +277,7 @@ function MediaAttachment({ media }: MediaAttachmentProps) {
 
   if (media.video) {
     return (
-      <video controls className="max-h-40 max-w-40">
+      <video controls className="max-h-20 max-w-20 rounded-md">
         <source src={wixMedia.getVideoUrl(media.video).url} type="video/mp4" />
       </video>
     );

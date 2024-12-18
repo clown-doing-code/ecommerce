@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className={`${lora.className} antialiased`}>
         <ReactQueryProvider>
           <Navbar />
-          {children}
+          <div className="min-[50vh]">{children}</div>
           <Footer />
         </ReactQueryProvider>
         <Toaster richColors />

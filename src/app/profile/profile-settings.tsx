@@ -34,6 +34,11 @@ import {
 import { members } from "@wix/members";
 import { useUpdateMember } from "@/hooks/members";
 import LoadingButton from "@/components/global/loading-btn";
+import Order from "@/components/global/order";
+import { getUserOrders } from "@/wix-api/orders";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { wixBrowserClient } from "@/lib/wix-client.browser";
+import Orders from "./orders";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, {
@@ -74,6 +79,20 @@ export default function ProfileSettingsPage({ member }: MemberInfoFormProps) {
   function onSubmit(values: ProfileFormValues) {
     mutation.mutate(values);
   }
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["orders"],
+      queryFn: async ({ pageParam }) =>
+        getUserOrders(wixBrowserClient, {
+          limit: 2,
+          cursor: pageParam,
+        }),
+      initialPageParam: null as string | null,
+      getNextPageParam: (lastPage) => lastPage.metadata?.cursors?.next,
+    });
+
+  const orders = data?.pages.flatMap((page) => page.orders) || [];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -163,32 +182,8 @@ export default function ProfileSettingsPage({ member }: MemberInfoFormProps) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Número de Pedido</TableHead>
-                    <TableHead>Fecha</TableHead>
-                    <TableHead>Total</TableHead>
-                    <TableHead>Estado</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {orderHistory.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell className="font-medium">{order.id}</TableCell>
-                      <TableCell>{order.date}</TableCell>
-                      <TableCell>RD${order.total.toFixed(2)}</TableCell>
-                      <TableCell>{order.status}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <Orders />
             </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full">
-                Ver Todos los Pedidos
-              </Button>
-            </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>

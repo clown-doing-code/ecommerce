@@ -7,6 +7,7 @@ import { getLoggedInMember } from "@/wix-api/members";
 export default async function Page() {
   const wixClient = await getWixServerClient();
   const member = await getLoggedInMember(wixClient);
+  const orders = wixClient.orders;
 
   if (!member) notFound();
   return (

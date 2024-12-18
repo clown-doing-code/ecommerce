@@ -153,21 +153,6 @@ const faqData = {
 
 export default function FAQPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  //TODO: Fix the search question feature
-  //   const handleSearch = (e: any) => {
-  //     e.preventDefault();
-  //     const results = Object.entries(faqData).flatMap(([category, questions]) =>
-  //       questions
-  //         .filter(
-  //           (q) =>
-  //             q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //             q.answer.toLowerCase().includes(searchTerm.toLowerCase()),
-  //         )
-  //         .map((q) => ({ ...q, category })),
-  //     );
-  //     setSearchResults(results);
-  //   };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -190,28 +175,6 @@ export default function FAQPage() {
           </Button>
         </div>
       </form>
-
-      {/* {searchResults.length > 0 ? (
-        <div className="mb-8">
-          <h2 className="mb-4 text-2xl font-semibold">
-            Resultados de búsqueda
-          </h2>
-          <Accordion type="single" collapsible className="w-full">
-            {searchResults.map((result, index) => (
-              <AccordionItem key={index} value={`search-result-${index}`}>
-                <AccordionTrigger>{result.question}</AccordionTrigger>
-                <AccordionContent>{result.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      ) : (
-        searchTerm && (
-          <p className="mb-8 text-center">
-            No se encontraron resultados para &quot;
-          </p>
-        )
-      )} */}
 
       <Tabs defaultValue="productos">
         <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
