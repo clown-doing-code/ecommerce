@@ -11,7 +11,9 @@ export default async function Page(props: PageProps) {
   const params = await props.params;
   const searchParams = await props.searchParams;
   if (params.id === "someId") {
-    redirect(`/products/i-m-a-product-1?${new URLSearchParams(searchParams)}`);
+    redirect(
+      `/products/soy-un-producto-1?${new URLSearchParams(searchParams)}`,
+    );
   }
   const wixClient = await getWixServerClient();
   const product = await getProductById(wixClient, params.id);
