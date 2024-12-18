@@ -1,19 +1,13 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import LoadingButton from "@/components/global/loading-btn";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -23,21 +17,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { members } from "@wix/members";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUpdateMember } from "@/hooks/members";
-import LoadingButton from "@/components/global/loading-btn";
-import Order from "@/components/global/order";
-import { getUserOrders } from "@/wix-api/orders";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { wixBrowserClient } from "@/lib/wix-client.browser";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { members } from "@wix/members";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import Orders from "./orders";
 
 const profileFormSchema = z.object({
@@ -58,12 +44,6 @@ interface MemberInfoFormProps {
   member: members.Member;
 }
 
-const orderHistory = [
-  { id: "1234", date: "2023-06-15", total: 150.0, status: "Entregado" },
-  { id: "1235", date: "2023-06-01", total: 89.99, status: "En tránsito" },
-  { id: "1236", date: "2023-05-20", total: 200.5, status: "Entregado" },
-];
-
 export default function ProfileSettingsPage({ member }: MemberInfoFormProps) {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -79,20 +59,6 @@ export default function ProfileSettingsPage({ member }: MemberInfoFormProps) {
   function onSubmit(values: ProfileFormValues) {
     mutation.mutate(values);
   }
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useInfiniteQuery({
-      queryKey: ["orders"],
-      queryFn: async ({ pageParam }) =>
-        getUserOrders(wixBrowserClient, {
-          limit: 2,
-          cursor: pageParam,
-        }),
-      initialPageParam: null as string | null,
-      getNextPageParam: (lastPage) => lastPage.metadata?.cursors?.next,
-    });
-
-  const orders = data?.pages.flatMap((page) => page.orders) || [];
 
   return (
     <div className="container mx-auto px-4 py-8">

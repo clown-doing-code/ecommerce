@@ -14,10 +14,7 @@ export async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function formatCurrency(
-  price: number | string = 0,
-  currency: string = "DOP", // Cambiado a DOP (código de moneda para Pesos Dominicanos)
-) {
+export function formatCurrency(price: number | string = 0) {
   return Intl.NumberFormat("es-DO", {
     // Usando locale es-DO para República Dominicana
     style: "currency",

@@ -200,8 +200,8 @@ export default function ShippingAndReturnsPage() {
                 </ol>
                 <p className="mt-4">
                   Si no tiene una cuenta, puede usar el número de pedido y su
-                  dirección de correo electrónico en nuestra página de "Rastrear
-                  Pedido".
+                  dirección de correo electrónico en nuestra página de
+                  &ldquo;Rastrear Pedido&rdquo;.
                 </p>
               </CardContent>
             </Card>

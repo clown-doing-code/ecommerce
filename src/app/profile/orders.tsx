@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { wixBrowserClient } from "@/lib/wix-client.browser";
 import { getUserOrders } from "@/wix-api/orders";
 import { useInfiniteQuery } from "@tanstack/react-query";
-//TODO: Estilizar este componente
+
 export default function Orders() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({

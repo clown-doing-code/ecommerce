@@ -11,12 +11,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { reviews } from "@wix/reviews";
 import { media as wixMedia } from "@wix/sdk";
 import { products } from "@wix/stores";
-import {
-  CornerDownRight,
-  StarIcon,
-  ThumbsUp,
-  MessageSquare,
-} from "lucide-react";
+import { StarIcon, ThumbsUp } from "lucide-react";
 import Zoom from "react-medium-image-zoom";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
